@@ -10,21 +10,9 @@ function App() {
   const [inPossession, updateInPossession] = useState(0);
   const [clock, updateClock] = useState([59,59]);  // minutes, seconds
 
-  const changeScore = (team, amount) => {
-    const [home, away] = scores;
-    if (team === 0) updateScores([home + amount, away]);
-    else updateScores([home, away + amount]);
-  }
 
-
-  const homeTD = () => changeScore(0, 7);
-  const awayTD = () => changeScore(1, 7);
-  const homeFG = () => changeScore(0, 3);
-  const awayFG = () => changeScore(1, 3);
-
-
-/*
-  setInterval(() => {
+  // respond to a timer by updating the clock
+  const handleInterval = () => {
     let [minutes, seconds] = clock;
     seconds--;
     if (seconds < 0) {
@@ -32,8 +20,29 @@ function App() {
       minutes--;
     }
     updateClock([minutes, seconds]);
-  }, 1000);
-*/
+  };
+
+
+  useEffect(() => {
+    const clockTimer = setInterval(handleInterval, 1000);
+
+    return () => {
+      clearInterval(clockTimer);
+    };
+  });
+
+
+  // score updating functions
+  const changeScore = (team, amount) => {
+    const [home, away] = scores;
+    if (team === 0) updateScores([home + amount, away]);
+    else updateScores([home, away + amount]);
+  }
+
+  const homeTD = () => changeScore(0, 7);
+  const awayTD = () => changeScore(1, 7);
+  const homeFG = () => changeScore(0, 3);
+  const awayFG = () => changeScore(1, 3);
 
 
   return (
